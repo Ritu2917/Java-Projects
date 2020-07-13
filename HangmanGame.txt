@@ -1,0 +1,126 @@
+//Java program for Hanman Game {Without Array}
+/*
+que-Java program based on hangman game
+*/
+//Importing the Scanner Class of util package for Input
+import java.util.Scanner;
+    //Main Class of the program
+    public class Main {
+        //Global Variable Start
+        private static Scanner scanner = new Scanner(System.in);
+        private static String word;
+        private static String hiddenWord;
+        private static boolean winner = false;
+        //Global Variable Ends
+
+        //Main Function of the program
+        public static void main(String[] args) {
+
+            System.out.print("Enter a word to guess: ");
+            //Taking  secret word as input from user
+            word = scanner.nextLine();
+            //Converting word into `Question (?)` Mark
+            hiddenWord = wordToQuestionMarks(word);
+            System.out.println("Hangman Word is Set\n\n");
+
+            int amountofGuesses = word.length();
+            int tries = 0;
+            //Loop will run till you are winner / you are out of moves
+            while (!winner && tries != amountofGuesses) {
+                guessLetter();
+                tries++;
+            }
+
+            if(!winner)
+            {
+                System.out.println("Oh! You ran out of guesses");
+            }else{
+                System.out.println("Congrats! You won");
+            }
+        }
+
+        //Function to convert string
+        private static String wordToQuestionMarks(String word) {
+            return word.replaceAll(".", "?");
+        }
+
+        //Taking guess character input from user
+        private static void guessLetter() {
+            System.out.println("Hidden Word: " + hiddenWord);
+
+            System.out.print("Guess a letter: ");
+            String letterChoice = scanner.nextLine();
+
+            int found = 0;
+
+            if (hasLetter(letterChoice)) {
+                found = updateGameState(letterChoice);
+            }
+
+            System.out.println("You found " + found + " " + letterChoice + "\n");
+            gameOver();
+        }
+
+        //Updating the game states
+        private static int updateGameState(String letter) {
+            int found = 0;
+
+            for(int i=0; i< word.length(); i++) {
+                if (word.charAt(i) == letter.charAt(0)) {
+                    String prev = hiddenWord.substring(0,i).concat(letter);
+                    hiddenWord = prev.concat(hiddenWord.substring(i+1));
+                    found++;
+                }
+            }
+
+            return found;
+        }
+
+        private static void gameOver() {
+            if (!hiddenWord.contains("?")) {
+                winner = true;
+            }
+        }
+
+        private static boolean hasLetter(String letter) {
+            if (word.contains(letter)) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+    } 
+
+/*
+Output:
+Enter a word to guess: stechies
+Hangman Word is Set
+
+Hidden Word: ????????
+Guess a letter: s
+You found 2 s
+
+Hidden Word: s??????s
+Guess a letter: t
+You found 1 t
+
+Hidden Word: st?????s
+Guess a letter: h
+You found 1 h
+
+Hidden Word: st??h??s
+Guess a letter: e
+You found 2 e
+
+Hidden Word: ste?h?es
+Guess a letter: i
+You found 1 i
+
+Hidden Word: ste?hies
+Guess a letter: c
+You found 1 c
+
+Congrats! You won
+*/
